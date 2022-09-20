@@ -1,0 +1,26 @@
+.Button {
+ border: 2px solid white;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: 30px;
+ width: 80px;
+
+ color: white;
+
+ transition: 0.2s ease;
+
+ user-select: none;
+
+ &:hover {
+  transform: scale(105%);
+ }
+}
+
+.disabled {
+ opacity: 0.5;
+
+ &:hover {
+  transform: scale(100%);
+ }
+}

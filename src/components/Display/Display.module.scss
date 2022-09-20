@@ -1,0 +1,23 @@
+.Display {
+ display: flex;
+ flex-grow: 1;
+ align-items: center;
+ justify-content: center;
+ height: 250px;
+ color: white;
+ font-size: 70px;
+ user-select: none;
+ transition: 0.5s ease-in-out;
+}
+
+.boxCrazy {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ width: 125px;
+ height: 125px;
+}
+
+.error {
+  background-color: #1A1423;
+}
