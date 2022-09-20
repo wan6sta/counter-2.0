@@ -35,33 +35,39 @@ export const Settings: FC<SettingsProps> = (props) => {
   const buttonDisable = initialValueError || minCounterLimitError || maxCounterLimitError
 
   const initialCounterValueTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (+e.currentTarget.value > +maxCounterLimitTemp || +e.currentTarget.value < +minCounterLimitTemp) {
+    const value = Math.round(+e.currentTarget.value)
+
+    if (value > +maxCounterLimitTemp || value < +minCounterLimitTemp) {
       setInitialValueError(true)
       return
     }
 
     setInitialValueError(false)
-    setInitialCounterValueTemp(+e.currentTarget.value)
+    setInitialCounterValueTemp(value)
   }
 
   const minCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (+e.currentTarget.value > +maxCounterLimitTemp || +e.currentTarget.value > +initialCounterValueTemp) {
+    const value = Math.round(+e.currentTarget.value)
+
+    if (value > +maxCounterLimitTemp || value > +initialCounterValueTemp) {
       setMinCounterLimitError(true)
       return
     }
 
     setMinCounterLimitError(false)
-    setMinCounterLimitTemp(+e.currentTarget.value)
+    setMinCounterLimitTemp(value)
   }
 
   const maxCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (+e.currentTarget.value < +minCounterLimitTemp || +e.currentTarget.value < +initialCounterValueTemp) {
+    const value = Math.round(+e.currentTarget.value)
+
+    if (value < +minCounterLimitTemp || value < +initialCounterValueTemp) {
       setMaxCounterLimitError(true)
       return
     }
 
     setMaxCounterLimitError(false)
-    setMaxCounterLimitTemp(+e.currentTarget.value)
+    setMaxCounterLimitTemp(value)
   }
 
   const setInitialDataHandler = () => {
@@ -82,12 +88,13 @@ export const Settings: FC<SettingsProps> = (props) => {
 
     setFinallyError(false)
 
+
     const action = {
       type: Actions.SET_INITIAL_DATA,
       payload: {
-        initialCounterValue: +initialCounterValueTemp,
-        maxCounterLimit: +maxCounterLimitTemp,
-        minCounterLimit: +minCounterLimitTemp
+        initialCounterValue: Math.round(+initialCounterValueTemp),
+        maxCounterLimit: Math.round(+maxCounterLimitTemp),
+        minCounterLimit: Math.round(+minCounterLimitTemp)
       }
     }
 
