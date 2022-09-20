@@ -1,6 +1,5 @@
 import {Display} from './components/Display/Display';
 import {Button} from './components/Button/Button';
-import settingsIcon from './assets/settings2.png'
 import {useReducer} from 'react';
 import {SettingsButton} from './components/SettingsButton/SettingsButton';
 import {Settings} from './components/Settings/Settings';

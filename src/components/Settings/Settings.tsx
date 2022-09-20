@@ -126,6 +126,7 @@ export const Settings: FC<SettingsProps> = (props) => {
       </div>
     </div>
     <Button onClick={setInitialDataHandler} disabled={buttonDisable}>Set</Button>
+    {finallyError && <span className={cls.errorFinally}>Some error</span>}
   </div>
 }
 
