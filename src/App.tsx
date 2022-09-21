@@ -4,6 +4,7 @@ import {useReducer} from 'react';
 import {SettingsButton} from './components/SettingsButton/SettingsButton';
 import {Settings} from './components/Settings/Settings';
 import {checkValue} from './helpers/checkValue';
+import {logDOM} from '@testing-library/react';
 
 export enum Actions {
   SET_SHOW_SETTINGS = 'SET_SHOW_SETTINGS',
@@ -49,6 +50,8 @@ const initialState: InitialState = {
   minCounterLimit: JSON.parse(minCounterLimit ? minCounterLimit : '-10'),
   maxCounterLimit: JSON.parse(maxCounterLimit ? maxCounterLimit : '10'),
 }
+
+console.log(parseInt('0004'))
 
 const reducer = (state = initialState, action: Action): InitialState => {
   switch (action.type) {

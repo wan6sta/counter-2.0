@@ -21,9 +21,9 @@ export const Settings: FC<SettingsProps> = (props) => {
 
   const settingsClassName = showSettings ? `${cls.Settings}` : `${cls.Settings} ${cls.hidden}`
 
-  const [initialValue, setInitialValue] = useState(otherProps.initialCounterValue)
-  const [minLimit, setMinLimit] = useState(otherProps.minCounterLimit)
-  const [maxLimit, setMaxLimit] = useState(otherProps.maxCounterLimit)
+  const [initialValue, setInitialValue] = useState(String(otherProps.initialCounterValue))
+  const [minLimit, setMinLimit] = useState(String(otherProps.minCounterLimit))
+  const [maxLimit, setMaxLimit] = useState(String(otherProps.maxCounterLimit))
 
   const [initialValueError, setInitialValueError] = useState(false)
   const [minLimitError, setMinLimitError] = useState(false)
@@ -40,8 +40,10 @@ export const Settings: FC<SettingsProps> = (props) => {
     setFinallyError(prev => false)
   }, [initialValueError, minLimitError, maxLimitError])
 
+  //const disableButton = initialValueError ||  minLimitError || maxLimitError
+
   useEffect(() => {
-    if (initialValue >= +maxLimit || initialValue <= +minLimit) {
+    if (+initialValue >= +maxLimit || +initialValue <= +minLimit) {
       setInitialValueError(prev => true)
       return
     }
@@ -49,38 +51,41 @@ export const Settings: FC<SettingsProps> = (props) => {
 
 
   useEffect(() => {
-    if (minLimit >= +maxLimit || minLimit >= +initialValue) {
+    if (+minLimit >= +maxLimit || +minLimit >= +initialValue) {
       setMinLimitError(prev => true)
       return
     }
+
   }, [minLimit])
 
   useEffect(() => {
-    if (maxLimit <= +minLimit || maxLimit <= +initialValue) {
+    if (+maxLimit <= +minLimit || +maxLimit <= +initialValue) {
       setMaxLimitError(prev => true)
       return
     }
+
   }, [maxLimit])
 
   const initialValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Math.round(+e.currentTarget.value)
+    const value = Math.round(parseInt(e.currentTarget.value))
 
     setInitialValueError(prev => false)
-    setInitialValue(value)
+    setInitialValue(prev => String(value))
   }
 
   const minCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Math.round(+e.currentTarget.value)
+    const value = Math.round(parseInt(e.currentTarget.value))
+
 
     setMinLimitError(prev => false)
-    setMinLimit(value)
+    setMinLimit(prev => String(value))
   }
 
   const maxCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Math.round(+e.currentTarget.value)
+    const value = Math.round(parseInt(e.currentTarget.value))
 
     setMaxLimitError(prev => false)
-    setMaxLimit(value)
+    setMinLimit(prev => String(value))
   }
 
   const setInitialDataHandler = () => {
