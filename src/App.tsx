@@ -3,18 +3,22 @@ import {Button} from './components/Button/Button';
 import {useReducer} from 'react';
 import {SettingsButton} from './components/SettingsButton/SettingsButton';
 import {Settings} from './components/Settings/Settings';
+import {checkValue} from './helpers/checkValue';
 
 export enum Actions {
   SET_SHOW_SETTINGS = 'SET_SHOW_SETTINGS',
+
   SET_COUNTER_INC = 'SET_COUNTER_INC',
   SET_COUNTER_DEC = 'SET_COUNTER_DEC',
   SET_COUNTER_RESET = 'SET_COUNTER_RESET',
+
   SET_INITIAL_DATA = 'SET_INITIAL_DATA'
 }
 
 enum localStorageKeys {
-  currentCounterValue = 'currentCounterValue',
   initialCounterValue = 'initialCounterValue',
+
+  currentCounterValue = 'currentCounterValue',
   maxCounterLimit = 'maxCounterLimit',
   minCounterLimit = 'minCounterLimit'
 }
@@ -79,8 +83,6 @@ const reducer = (state = initialState, action: Action): InitialState => {
         return state
       }
 
-      localStorage.setItem(localStorageKeys.currentCounterValue, JSON.stringify(state.initialCounterValue))
-
       return {
         ...state,
         currentCounterValue: state.initialCounterValue
@@ -90,6 +92,14 @@ const reducer = (state = initialState, action: Action): InitialState => {
       localStorage.setItem(localStorageKeys.initialCounterValue, JSON.stringify(action.payload.initialCounterValue))
       localStorage.setItem(localStorageKeys.minCounterLimit, JSON.stringify(action.payload.minCounterLimit))
       localStorage.setItem(localStorageKeys.maxCounterLimit, JSON.stringify(action.payload.maxCounterLimit))
+
+      if (checkValue(
+        action.payload.initialCounterValue,
+        action.payload.minCounterLimit,
+        action.payload.maxCounterLimit) === 'error'
+      ) {
+        return state
+      }
 
       return {
         ...state,
@@ -163,11 +173,13 @@ export const App = () => {
       </div>
 
       <SettingsButton showSettingsHandler={showSettingsHandler}/>
+
       <Settings
         setInitialValue={setInitialValue}
         initialCounterValue={state.initialCounterValue}
         maxCounterLimit={state.maxCounterLimit}
         minCounterLimit={state.minCounterLimit}
+
         showSettings={state.showSettings}
       />
     </div>

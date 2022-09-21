@@ -1,104 +1,100 @@
 import cls from './Settings.module.scss'
-import {ChangeEvent, FC, useState} from 'react'
+import {ChangeEvent, FC, useEffect, useState} from 'react'
 import {Button} from '../Button/Button';
 import {Action, Actions} from '../../App';
 
 interface SettingsProps {
-  showSettings: boolean,
-  initialCounterValue: number,
-  maxCounterLimit: number,
+  showSettings: boolean
+
+  initialCounterValue: number
+  maxCounterLimit: number
   minCounterLimit: number
+
   setInitialValue: (action: Action) => void
 }
 
 export const Settings: FC<SettingsProps> = (props) => {
   const {
     showSettings,
-    initialCounterValue,
-    minCounterLimit,
-    maxCounterLimit,
-    setInitialValue
+    ...otherProps
   } = props
 
   const settingsClassName = showSettings ? `${cls.Settings}` : `${cls.Settings} ${cls.hidden}`
 
-  const [initialCounterValueTemp, setInitialCounterValueTemp] = useState(initialCounterValue)
-  const [minCounterLimitTemp, setMinCounterLimitTemp] = useState(minCounterLimit)
-  const [maxCounterLimitTemp, setMaxCounterLimitTemp] = useState(maxCounterLimit)
+  const [initialValue, setInitialValue] = useState(otherProps.initialCounterValue)
+  const [minLimit, setMinLimit] = useState(otherProps.minCounterLimit)
+  const [maxLimit, setMaxLimit] = useState(otherProps.maxCounterLimit)
 
   const [initialValueError, setInitialValueError] = useState(false)
-  const [minCounterLimitError, setMinCounterLimitError] = useState(false)
-  const [maxCounterLimitError, setMaxCounterLimitError] = useState(false)
+  const [minLimitError, setMinLimitError] = useState(false)
+  const [maxLimitError, setMaxLimitError] = useState(false)
 
   const [finallyError, setFinallyError] = useState(false)
 
-  const buttonDisable = initialValueError || minCounterLimitError || maxCounterLimitError
-
-  const initialCounterValueTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Math.round(+e.currentTarget.value)
-
-    if (value > +maxCounterLimitTemp || value < +minCounterLimitTemp) {
-      setInitialValueError(true)
+  useEffect(() => {
+    if (initialValueError || minLimitError || maxLimitError) {
+      setFinallyError(prev => true)
       return
     }
 
-    setInitialValueError(false)
-    setInitialCounterValueTemp(value)
+    setFinallyError(prev => false)
+  }, [initialValueError, minLimitError, maxLimitError])
+
+  useEffect(() => {
+    if (initialValue >= +maxLimit || initialValue <= +minLimit) {
+      setInitialValueError(prev => true)
+      return
+    }
+  }, [initialValue])
+
+
+  useEffect(() => {
+    if (minLimit >= +maxLimit || minLimit >= +initialValue) {
+      setMinLimitError(prev => true)
+      return
+    }
+  }, [minLimit])
+
+  useEffect(() => {
+    if (maxLimit <= +minLimit || maxLimit <= +initialValue) {
+      setMaxLimitError(prev => true)
+      return
+    }
+  }, [maxLimit])
+
+  const initialValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Math.round(+e.currentTarget.value)
+
+    setInitialValueError(prev => false)
+    setInitialValue(value)
   }
 
   const minCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Math.round(+e.currentTarget.value)
 
-    if (value > +maxCounterLimitTemp || value > +initialCounterValueTemp) {
-      setMinCounterLimitError(true)
-      return
-    }
-
-    setMinCounterLimitError(false)
-    setMinCounterLimitTemp(value)
+    setMinLimitError(prev => false)
+    setMinLimit(value)
   }
 
   const maxCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Math.round(+e.currentTarget.value)
 
-    if (value < +minCounterLimitTemp || value < +initialCounterValueTemp) {
-      setMaxCounterLimitError(true)
-      return
-    }
-
-    setMaxCounterLimitError(false)
-    setMaxCounterLimitTemp(value)
+    setMaxLimitError(prev => false)
+    setMaxLimit(value)
   }
 
   const setInitialDataHandler = () => {
-    if (initialCounterValueTemp > maxCounterLimitTemp || initialCounterValueTemp < minCounterLimitTemp) {
-      setFinallyError(true)
-      return
-    }
-
-    if (minCounterLimitTemp > maxCounterLimitTemp || minCounterLimitTemp > initialCounterValueTemp) {
-      setFinallyError(true)
-      return
-    }
-
-    if (maxCounterLimitTemp < minCounterLimitTemp || maxCounterLimitTemp < initialCounterValueTemp) {
-      setFinallyError(true)
-      return
-    }
-
-    setFinallyError(false)
-
 
     const action = {
       type: Actions.SET_INITIAL_DATA,
       payload: {
-        initialCounterValue: Math.round(+initialCounterValueTemp),
-        maxCounterLimit: Math.round(+maxCounterLimitTemp),
-        minCounterLimit: Math.round(+minCounterLimitTemp)
+        initialCounterValue: initialValue,
+        maxCounterLimit: maxLimit,
+        minCounterLimit: minLimit
       }
     }
 
-    setInitialValue(action)
+    otherProps.setInitialValue(action)
   }
 
   return <div className={settingsClassName}>
@@ -107,8 +103,8 @@ export const Settings: FC<SettingsProps> = (props) => {
         <span>Start value</span>
         <input
           className={initialValueError ? cls.errorInput : ''}
-          onChange={initialCounterValueTempHandler}
-          value={initialCounterValueTemp}
+          onChange={initialValueHandler}
+          value={initialValue}
           type="number"
         />
       </div>
@@ -116,9 +112,9 @@ export const Settings: FC<SettingsProps> = (props) => {
       <div className={cls.settingsItem}>
         <span>Min value</span>
         <input
-          className={minCounterLimitError ? cls.errorInput : ''}
+          className={minLimitError ? cls.errorInput : ''}
           onChange={minCounterLimitTempHandler}
-          value={minCounterLimitTemp}
+          value={minLimit}
           type="number"
         />
       </div>
@@ -126,13 +122,13 @@ export const Settings: FC<SettingsProps> = (props) => {
       <div className={cls.settingsItem}>
         <span>Max value</span>
         <input
-          className={maxCounterLimitError ? cls.errorInput : ''}
+          className={maxLimitError ? cls.errorInput : ''}
           onChange={maxCounterLimitTempHandler}
-          value={maxCounterLimitTemp} type="number"
+          value={maxLimit} type="number"
         />
       </div>
     </div>
-    <Button onClick={setInitialDataHandler} disabled={buttonDisable}>Set</Button>
+    <Button onClick={setInitialDataHandler} disabled={finallyError}>Set</Button>
     {finallyError && <span className={cls.errorFinally}>Some error</span>}
   </div>
 }
