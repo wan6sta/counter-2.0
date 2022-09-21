@@ -68,9 +68,9 @@ export const Settings: FC<SettingsProps> = (props) => {
 
   const initialValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Math.round(parseInt(e.currentTarget.value))
+    setInitialValue(prev => String(value))
 
     setInitialValueError(prev => false)
-    setInitialValue(prev => String(value))
   }
 
   const minCounterLimitTempHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +85,7 @@ export const Settings: FC<SettingsProps> = (props) => {
     const value = Math.round(parseInt(e.currentTarget.value))
 
     setMaxLimitError(prev => false)
-    setMinLimit(prev => String(value))
+    setMaxLimit(prev => String(value))
   }
 
   const setInitialDataHandler = () => {
@@ -93,9 +93,9 @@ export const Settings: FC<SettingsProps> = (props) => {
     const action = {
       type: Actions.SET_INITIAL_DATA,
       payload: {
-        initialCounterValue: initialValue,
-        maxCounterLimit: maxLimit,
-        minCounterLimit: minLimit
+        initialCounterValue: +initialValue,
+        maxCounterLimit: +maxLimit,
+        minCounterLimit: +minLimit
       }
     }
 

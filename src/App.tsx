@@ -106,10 +106,10 @@ const reducer = (state = initialState, action: Action): InitialState => {
 
       return {
         ...state,
-        initialCounterValue: action.payload.initialCounterValue,
-        minCounterLimit: action.payload.minCounterLimit,
-        maxCounterLimit: action.payload.maxCounterLimit,
-        currentCounterValue: action.payload.initialCounterValue
+        initialCounterValue: +action.payload.initialCounterValue,
+        minCounterLimit: +action.payload.minCounterLimit,
+        maxCounterLimit: +action.payload.maxCounterLimit,
+        currentCounterValue: +action.payload.initialCounterValue
       }
 
     default:
